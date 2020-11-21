@@ -89,18 +89,33 @@
         this._salt = salt;
       }
 
+      _encodeQueryData(data) {
+        const ret = [];
+
+        for (let key in data) {
+          let value = data[key];
+          ret.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+        }
+
+        return ret.join('&');
+      }
+
       createInvoice(request) {
-        var jsonString = JSON.stringify(request);
-        let hashString = `${this._merchantId}|create_invoice|${jsonString}|${this._salt}`;
-        let hashRes = "";
-        let requestBody = "";
-        let urlEncodedDataPairs = [];
-        urlEncodedDataPairs.push(encodeURIComponent("key") + '=' + encodeURIComponent(this._merchantId));
-        urlEncodedDataPairs.push(encodeURIComponent("command") + '=' + encodeURIComponent("create_invoice"));
-        urlEncodedDataPairs.push(encodeURIComponent("hash") + '=' + encodeURIComponent(hashRes));
-        urlEncodedDataPairs.push(encodeURIComponent("var1") + '=' + encodeURIComponent(jsonString));
-        requestBody = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
-        var _ep = this._endpoint;
+        var jsonRequest = JSON.stringify(request);
+        let hashString = `${this._merchantId}|create_invoice|${jsonRequest}|${this._salt}`;
+        let hashRes = '';
+        console.log('Message hash');
+        console.log(hashString);
+        console.log(hashRes);
+        var data = {
+          "key": this._merchantId,
+          "command": "create_invoice",
+          "hash": hashRes,
+          "var1": jsonRequest
+        };
+
+        let requestBody = this._encodeQueryData(data);
+
         return new Promise((resolve, reject) => {
           var rr = new PayUResponse();
           rr.transactionId = request.txnid;
@@ -133,7 +148,7 @@
             }
           };
 
-          xhr.open("POST", _ep);
+          xhr.open("POST", this._endpoint);
           xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
           xhr.send(requestBody);
         });
