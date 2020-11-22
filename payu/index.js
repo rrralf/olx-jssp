@@ -1253,16 +1253,6 @@
 	            displayName: "Get gateway version",
 	            type: "read",
 	            outputs: ["version"]
-	          },
-	          "testRe2": {
-	            displayName: "test regexp 2",
-	            type: "read",
-	            outputs: ["version"]
-	          },
-	          "testRe3": {
-	            displayName: "test regexp 3",
-	            type: "read",
-	            outputs: ["version"]
 	          }
 	        }
 	      }
@@ -1309,14 +1299,6 @@
 
 	    case "GetVersion":
 	      await payuGetVersion();
-	      break;
-
-	    case "testRe2":
-	      await testRE2();
-	      break;
-
-	    case "testRe3":
-	      await testRE3();
 	      break;
 
 	    default:
@@ -1411,49 +1393,6 @@
 	    "debugRequest": response.debugRequest,
 	    "debugResponse": response.debugResponse
 	  };
-	}
-
-	function testRE2() {
-	  var response = `<pre>Array
-    (
-        [Transaction Id] => test104
-        [Email Id] => aleksey.rybakov@gmail.com
-        [Phone] => 380672236251
-        [Status] => Success
-        [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
-    )
-    </pre>`;
-	  var match = /<pre>(.*?)<\/pre>/ims.exec(response);
-	  return new Promise((resolve, reject) => {
-	    postResult({
-	      "version": JSON.stringify(match)
-	    });
-	  });
-	}
-
-	function testRE3() {
-	  var response = `<pre>Array
-    (
-        [Transaction Id] => test104
-        [Email Id] => aleksey.rybakov@gmail.com
-        [Phone] => 380672236251
-        [Status] => Success
-        [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
-    )
-    </pre>`;
-	  let vals = {};
-	  response.split("\n").forEach(function (line) {
-	    let mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
-
-	    if (mmm && mmm.length == 3) {
-	      vals[mmm[1]] = mmm[2];
-	    }
-	  });
-	  return new Promise((resolve, reject) => {
-	    postResult({
-	      "version": JSON.stringify(vals)
-	    });
-	  });
 	}
 
 }());
