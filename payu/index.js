@@ -962,7 +962,7 @@
 	        } else {
 	          resp['ErrorCode'] = '0';
 	          text.split("\n").forEach(function (line) {
-	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
+	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)$/.exec(line);
 
 	            if (mmm && mmm.length == 3) {
 	              resp[mmm[1]] = mmm[2];
@@ -1032,7 +1032,6 @@
 	                rr.errorDescription = resp['Error'];
 	                rr.statusCode = '100';
 	              } else {
-	                rr.transactionId = resp['Transaction Id'];
 	                rr.url = resp['URL'];
 	                rr.email = resp['Email Id'];
 	              }
