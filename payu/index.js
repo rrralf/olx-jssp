@@ -963,13 +963,6 @@
 	          resp['Error'] = text;
 	        } else {
 	          resp['ErrorCode'] = '0';
-	          text.split("\n").forEach(function (line) {
-	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
-
-	            if (mmm && mmm.length == 3) {
-	              resp[mmm[1]] = mmm[2];
-	            }
-	          });
 	        }
 	      } else {
 	        resp['ErrorCode'] = '100';
