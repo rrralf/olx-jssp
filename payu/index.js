@@ -964,7 +964,7 @@
 	        } else {
 	          resp['ErrorCode'] = '0';
 	          text.split("\n").forEach(function (line) {
-	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)$/.exec(line);
+	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
 
 	            if (mmm && mmm.length == 3) {
 	              resp[mmm[1]] = mmm[2];
@@ -1347,7 +1347,7 @@
 	function payuGetVersion(parameters, configuration) {
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": "202011220242"
+	      "version": "202011220307"
 	    });
 	  });
 	}
