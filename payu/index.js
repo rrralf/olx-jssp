@@ -951,11 +951,10 @@
 	    PayU.PayUResponse = PayUResponse;
 
 	    function payuParseResp(response) {
-	      var match = /<pre>(.*?)<\/pre>/ims.exec(response);
 	      var resp = {};
 
-	      if (match && match.length == 2) {
-	        var text = match[1];
+	      if (response.startsWith("<pre>")) {
+	        var text = response.substring(5, response.length - 6);
 
 	        if (!text.startsWith('Array')) {
 	          resp['ErrorCode'] = '101';
