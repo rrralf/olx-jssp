@@ -951,8 +951,7 @@
 	    PayU.PayUResponse = PayUResponse;
 
 	    function payuParseResp(response) {
-	      var preRegex = new RegExp('^<pre>(.*?)<\/pre>$', 'ims');
-	      var match = preRegex.exec(response);
+	      var match = /<pre>(.*?)<\/pre>/ims.exec(response);
 	      var resp = {};
 
 	      if (match && match.length == 2) {
@@ -963,6 +962,13 @@
 	          resp['Error'] = text;
 	        } else {
 	          resp['ErrorCode'] = '0';
+	          text.split("\n").forEach(function (line) {
+	            var mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
+
+	            if (mmm && mmm.length == 3) {
+	              resp[mmm[1]] = mmm[2];
+	            }
+	          });
 	        }
 	      } else {
 	        resp['ErrorCode'] = '100';
@@ -1445,11 +1451,10 @@
         [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
     )
     </pre>`;
-	  const preRegex = new RegExp('^<pre>(.*?)<\/pre>$', 'ims');
-	  var match = preRegex.exec(resp3);
+	  var match = /<pre>(.*?)<\/pre>/ims.exec(resp3);
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": match === null || match === void 0 ? void 0 : match.toString()
+	      "version": JSON.stringify(match)
 	    });
 	  });
 	}
