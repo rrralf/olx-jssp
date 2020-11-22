@@ -1025,6 +1025,7 @@
 	              if (xhr.status !== 200) throw new Error("Failed with status " + xhr.status + "; " + xhr.responseText);
 	              rr.debugResponse = xhr.responseText;
 	              var resp = payuParseResp(xhr.responseText);
+	              rr.statusDescription = JSON.stringify(resp);
 
 	              if (resp['Error']) {
 	                rr.errorCode = resp['ErrorCode'];
