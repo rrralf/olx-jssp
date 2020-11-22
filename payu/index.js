@@ -1254,11 +1254,6 @@
 	            type: "read",
 	            outputs: ["version"]
 	          },
-	          "testRe1": {
-	            displayName: "test regexp 1",
-	            type: "read",
-	            outputs: ["version"]
-	          },
 	          "testRe2": {
 	            displayName: "test regexp 2",
 	            type: "read",
@@ -1314,10 +1309,6 @@
 
 	    case "GetVersion":
 	      await payuGetVersion();
-	      break;
-
-	    case "testRe1":
-	      await testRE1();
 	      break;
 
 	    case "testRe2":
@@ -1422,27 +1413,8 @@
 	  };
 	}
 
-	function testRE1() {
-	  var resp3 = `<pre>Array
-    (
-        [Transaction Id] => test104
-        [Email Id] => aleksey.rybakov@gmail.com
-        [Phone] => 380672236251
-        [Status] => Success
-        [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
-    )
-    </pre>`;
-	  const preRegex = new RegExp('^<pre>(.*?)<\/pre>$', 'ims');
-	  var match = preRegex.exec(resp3);
-	  return new Promise((resolve, reject) => {
-	    postResult({
-	      "version": match === null || match === void 0 ? void 0 : match.toString()
-	    });
-	  });
-	}
-
 	function testRE2() {
-	  var resp3 = `<pre>Array
+	  var response = `<pre>Array
     (
         [Transaction Id] => test104
         [Email Id] => aleksey.rybakov@gmail.com
@@ -1451,7 +1423,7 @@
         [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
     )
     </pre>`;
-	  var match = /<pre>(.*?)<\/pre>/ims.exec(resp3);
+	  var match = /<pre>(.*?)<\/pre>/ims.exec(response);
 	  return new Promise((resolve, reject) => {
 	    postResult({
 	      "version": JSON.stringify(match)
@@ -1460,7 +1432,7 @@
 	}
 
 	function testRE3() {
-	  var resp3 = `<pre>Array
+	  var response = `<pre>Array
     (
         [Transaction Id] => test104
         [Email Id] => aleksey.rybakov@gmail.com
@@ -1469,17 +1441,17 @@
         [URL] => https://test.payu.in/processInvoice?invoiceId=e66333800857d48a36f5127ccc86423c
     )
     </pre>`;
-	  let resp = {};
-	  resp3.split("\n").forEach(function (line) {
+	  let vals = {};
+	  response.split("\n").forEach(function (line) {
 	    let mmm = /\[(.*?)\]\s+=>\s+(.*?)/.exec(line);
 
 	    if (mmm && mmm.length == 3) {
-	      resp[mmm[1]] = mmm[2];
+	      vals[mmm[1]] = mmm[2];
 	    }
 	  });
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": JSON.stringify(resp)
+	      "version": JSON.stringify(vals)
 	    });
 	  });
 	}
