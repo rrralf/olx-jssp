@@ -1001,7 +1001,7 @@
 	function payuGetVersion(parameters, configuration) {
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": "202012050033"
+	      "version": "202012050044"
 	    });
 	  });
 	}
