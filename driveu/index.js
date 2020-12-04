@@ -375,7 +375,7 @@
 	        },
 	        methods: {
 	          "CreateBooking": {
-	            displayName: "CreateBooking",
+	            displayName: "Create Booking",
 	            type: "execute",
 	            parameters: {
 	              "pClientBookingId": {
@@ -385,22 +385,22 @@
 	              },
 	              "pCity": {
 	                displayName: "pCity",
-	                description: "This parameter should contain a brief product description. It should be a string describing the product",
+	                description: "",
 	                type: "string"
 	              },
 	              "pCarType": {
 	                displayName: "pCarType",
-	                description: "Transaction amount",
+	                description: "manual/automatic",
 	                type: "string"
 	              },
 	              "pCustomerName": {
 	                displayName: "pCustomerName",
-	                description: "Address line #1",
+	                description: "",
 	                type: "string"
 	              },
 	              "pCustomerMobile": {
 	                displayName: "pCustomerMobile",
-	                description: "City",
+	                description: "",
 	                type: "string"
 	              },
 	              "pPickupDatetime": {
@@ -410,37 +410,37 @@
 	              },
 	              "pPickupAddress": {
 	                displayName: "pPickupAddress",
-	                description: "State",
+	                description: "",
 	                type: "string"
 	              },
 	              "pPickupLongitude": {
 	                displayName: "pPickupLongitude",
-	                description: "email of the customer",
+	                description: "",
 	                type: "string"
 	              },
 	              "pPickupLatitude": {
 	                displayName: "pPickupLatitude",
-	                description: "email of the customer",
+	                description: "",
 	                type: "string"
 	              },
 	              "pDropAddress": {
 	                displayName: "pDropAddress",
-	                description: "Country",
+	                description: "",
 	                type: "string"
 	              },
 	              "pDropLongitude": {
 	                displayName: "pDropLongitude",
-	                description: "email of the customer",
+	                description: "",
 	                type: "string"
 	              },
 	              "pDropLatitude": {
 	                displayName: "pDropLatitude",
-	                description: "email of the customer",
+	                description: "",
 	                type: "string"
 	              },
 	              "pDropLocationContact": {
 	                displayName: "pDropLocationContact",
-	                description: "last name of the customer",
+	                description: "",
 	                type: "string"
 	              }
 	            },
@@ -570,15 +570,24 @@
 	  };
 	  return new Promise((resolve, reject) => {
 	    var wrap = new driveuApi_1.DriveU(endpoint, client_slug, salt);
-	    wrap.createBooking(request).then(response => {
-	      console.log(response);
-	      postResult(toK2Result(response));
-	      resolve();
-	    }).catch(err => {
-	      console.log(err);
-	      postResult(toK2Result(err));
-	      reject(err);
-	    });
+
+	    try {
+	      wrap.createBooking(request).then(response => {
+	        console.log(response);
+	        postResult(toK2Result(response));
+	        resolve();
+	      }).catch(err => {
+	        console.log(err);
+	        postResult(toK2Result(err));
+	        reject(err);
+	      });
+	    } catch (e) {
+	      var rr = new driveuApi_1.DriveUResponse();
+	      rr.errorCode = "-1";
+	      rr.errorDescription = e.message;
+	      postResult(toK2Result(rr));
+	      reject();
+	    }
 	  });
 	}
 
@@ -630,7 +639,7 @@
 	function payuGetVersion(parameters, configuration) {
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": "202012050055"
+	      "version": "202012050103"
 	    });
 	  });
 	}
