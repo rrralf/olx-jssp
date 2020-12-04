@@ -2801,7 +2801,6 @@
 	          var query = _this._endpoint + "/affiliate/get-booking-status/?" + queryString;
 	          rr.errorDescription = query;
 	          xhr.open("GET", query);
-	          xhr.responseType = 'json';
 	          xhr.send();
 	        });
 	      };
