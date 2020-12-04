@@ -586,7 +586,7 @@
 	      rr.errorCode = "-1";
 	      rr.errorDescription = e.message;
 	      postResult(toK2Result(rr));
-	      reject();
+	      resolve();
 	    }
 	  });
 	}
