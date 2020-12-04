@@ -2772,6 +2772,7 @@
 	                  rr.driverId = obj["driver_id"];
 	                  rr.driverName = obj["driver_name"];
 	                  rr.driverNumber = obj["driver_number"];
+	                  rr.errorDescription = '';
 	                } else if (obj["status"] != undefined && obj["status"] == "error") {
 	                  rr.errorCode = "103";
 	                  rr.errorDescription = obj['message'];
@@ -2798,6 +2799,7 @@
 	          var queryString = _this._encodeQueryData(data);
 
 	          var query = _this._endpoint + "/affiliate/get-booking-status/?" + queryString;
+	          rr.errorDescription = query;
 	          xhr.open("GET", query);
 	          xhr.responseType = 'json';
 	          xhr.send();
