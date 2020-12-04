@@ -7,6 +7,166 @@
 		return module = { exports: {} }, fn(module, module.exports), module.exports;
 	}
 
+	var tssha1 = createCommonjsModule(function (module, exports) {
+
+	  exports.__esModule = true;
+	  exports.sha1 = void 0;
+	  var sha1;
+
+	  (function (sha1) {
+	    var POW_2_24 = Math.pow(2, 24);
+	    var POW_2_32 = Math.pow(2, 32);
+
+	    function hex(n) {
+	      var s = "",
+	          v;
+
+	      for (var i = 7; i >= 0; --i) {
+	        v = n >>> (i << 2) & 0xF;
+	        s += v.toString(16);
+	      }
+
+	      return s;
+	    }
+
+	    function lrot(n, bits) {
+	      return n << bits | n >>> 32 - bits;
+	    }
+
+	    var Uint32ArrayBigEndian = function () {
+	      function Uint32ArrayBigEndian(length) {
+	        this.bytes = new Uint8Array(length << 2);
+	      }
+
+	      Uint32ArrayBigEndian.prototype.get = function (index) {
+	        index <<= 2;
+	        return this.bytes[index] * POW_2_24 + (this.bytes[index + 1] << 16 | this.bytes[index + 2] << 8 | this.bytes[index + 3]);
+	      };
+
+	      Uint32ArrayBigEndian.prototype.set = function (index, value) {
+	        var high = Math.floor(value / POW_2_24),
+	            rest = value - high * POW_2_24;
+	        index <<= 2;
+	        this.bytes[index] = high;
+	        this.bytes[index + 1] = rest >> 16;
+	        this.bytes[index + 2] = rest >> 8 & 0xFF;
+	        this.bytes[index + 3] = rest & 0xFF;
+	      };
+
+	      return Uint32ArrayBigEndian;
+	    }();
+
+	    function string2ArrayBuffer(s) {
+	      s = s.replace(/[\u0080-\u07ff]/g, function (c) {
+	        var code = c.charCodeAt(0);
+	        return String.fromCharCode(0xC0 | code >> 6, 0x80 | code & 0x3F);
+	      });
+	      s = s.replace(/[\u0080-\uffff]/g, function (c) {
+	        var code = c.charCodeAt(0);
+	        return String.fromCharCode(0xE0 | code >> 12, 0x80 | code >> 6 & 0x3F, 0x80 | code & 0x3F);
+	      });
+	      var n = s.length,
+	          array = new Uint8Array(n);
+
+	      for (var i = 0; i < n; ++i) {
+	        array[i] = s.charCodeAt(i);
+	      }
+
+	      return array.buffer;
+	    }
+
+	    function hash(bufferOrString) {
+	      var source;
+
+	      if (bufferOrString instanceof ArrayBuffer) {
+	        source = bufferOrString;
+	      } else {
+	        source = string2ArrayBuffer(String(bufferOrString));
+	      }
+
+	      var h0 = 0x67452301,
+	          h1 = 0xEFCDAB89,
+	          h2 = 0x98BADCFE,
+	          h3 = 0x10325476,
+	          h4 = 0xC3D2E1F0,
+	          i,
+	          sbytes = source.byteLength,
+	          sbits = sbytes << 3,
+	          minbits = sbits + 65,
+	          bits = Math.ceil(minbits / 512) << 9,
+	          bytes = bits >>> 3,
+	          slen = bytes >>> 2,
+	          s = new Uint32ArrayBigEndian(slen),
+	          s8 = s.bytes,
+	          j,
+	          w = new Uint32Array(80),
+	          sourceArray = new Uint8Array(source);
+
+	      for (i = 0; i < sbytes; ++i) {
+	        s8[i] = sourceArray[i];
+	      }
+
+	      s8[sbytes] = 0x80;
+	      s.set(slen - 2, Math.floor(sbits / POW_2_32));
+	      s.set(slen - 1, sbits & 0xFFFFFFFF);
+
+	      for (i = 0; i < slen; i += 16) {
+	        for (j = 0; j < 16; ++j) {
+	          w[j] = s.get(i + j);
+	        }
+
+	        for (; j < 80; ++j) {
+	          w[j] = lrot(w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16], 1);
+	        }
+
+	        var a = h0,
+	            b = h1,
+	            c = h2,
+	            d = h3,
+	            e = h4,
+	            f,
+	            k,
+	            temp;
+
+	        for (j = 0; j < 80; ++j) {
+	          if (j < 20) {
+	            f = b & c | ~b & d;
+	            k = 0x5A827999;
+	          } else if (j < 40) {
+	            f = b ^ c ^ d;
+	            k = 0x6ED9EBA1;
+	          } else if (j < 60) {
+	            f = b & c ^ b & d ^ c & d;
+	            k = 0x8F1BBCDC;
+	          } else {
+	            f = b ^ c ^ d;
+	            k = 0xCA62C1D6;
+	          }
+
+	          temp = lrot(a, 5) + f + e + k + w[j] & 0xFFFFFFFF;
+	          e = d;
+	          d = c;
+	          c = lrot(b, 30);
+	          b = a;
+	          a = temp;
+	        }
+
+	        h0 = h0 + a & 0xFFFFFFFF;
+	        h1 = h1 + b & 0xFFFFFFFF;
+	        h2 = h2 + c & 0xFFFFFFFF;
+	        h3 = h3 + d & 0xFFFFFFFF;
+	        h4 = h4 + e & 0xFFFFFFFF;
+	      }
+
+	      return hex(h0) + hex(h1) + hex(h2) + hex(h3) + hex(h4);
+	    }
+
+	    sha1.hash = hash;
+	  })(sha1 = exports.sha1 || (exports.sha1 = {}));
+	});
+	unwrapExports(tssha1);
+	var tssha1_1 = tssha1.sha1;
+
 	var driveuApi = createCommonjsModule(function (module, exports) {
 
 	  exports.__esModule = true;
@@ -45,28 +205,38 @@
 
 	      DriveU.prototype.getHash = function (client_booking_id) {
 	        var msg = client_booking_id + "|" + this._salt;
-	        return msg;
+	        var strhash = tssha1.sha1.hash(msg);
+	        var digest = [];
+
+	        for (var i = 0; i < strhash.length; i += 2) {
+	          var sstr = strhash.substr(i, 2);
+	          var charCode = Number("0x" + sstr);
+	          digest[digest.length] = charCode;
+	        }
+
+	        var identity_hash = Buffer.from(digest).toString('base64');
+	        return identity_hash;
 	      };
 
 	      DriveU.prototype.validateRequest = function (request) {
 	        if (request == undefined) {
-	          throw Error('request is empty');
+	          throw new Error('request is empty');
 	        }
 
 	        if (request["client_booking_id"] == undefined || request["client_booking_id"] == "") {
-	          throw Error('client_booking_id is empty');
+	          throw new Error('client_booking_id is empty');
 	        }
 
 	        var car_types = ["automatic", "manual"];
 
 	        if (car_types.indexOf(request["car_type"]) == -1) {
-	          throw Error('wrong car_type value');
+	          throw new Error('wrong car_type value');
 	        }
 
 	        var cities = ["bangalore", "chennai", "mumbai", "pure", "delhi", "delhi ncr", "hyderabad", "ahmedabad", "kolkata", "kochi"];
 
 	        if (cities.indexOf(request["city"].toLowerCase()) == -1) {
-	          throw Error('wrong city value');
+	          throw new Error('wrong city value');
 	        }
 	      };
 
