@@ -2761,7 +2761,7 @@
 	            try {
 	              if (xhr.readyState !== 4) return;
 	              if (xhr.status !== 200) throw new Error("Failed with status " + xhr.status + "; " + xhr.responseText);
-	              rr.debugResponse = xhr.responseText;
+	              rr.debugResponse = xhr.responseType + " -- " + xhr.responseText;
 	              resolve(rr);
 	            } catch (e) {
 	              rr.errorCode = "-2";
