@@ -2761,7 +2761,7 @@
 	            try {
 	              if (xhr.readyState !== 4) return;
 	              if (xhr.status !== 200) throw new Error("Failed with status " + xhr.status + "; " + xhr.responseText);
-	              rr.debugResponse = xhr.responseType + " -- " + xhr.responseText;
+	              rr.debugResponse = "" + xhr.responseText;
 	              var obj = JSON.parse(xhr.responseText);
 
 	              if (obj != undefined) {
@@ -2800,7 +2800,6 @@
 	          var queryString = _this._encodeQueryData(data);
 
 	          var url = _this._endpoint + "/affiliate/get-booking-status/?" + queryString;
-	          rr.errorDescription = url;
 	          xhr.open("GET", url);
 	          xhr.send();
 	        });
@@ -3162,7 +3161,7 @@
 	function payuGetVersion(parameters, configuration) {
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": "202012051455"
+	      "version": "202012051506"
 	    });
 	  });
 	}
