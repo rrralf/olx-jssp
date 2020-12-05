@@ -2762,35 +2762,9 @@
 	              if (xhr.readyState !== 4) return;
 	              if (xhr.status !== 200) throw new Error("Failed with status " + xhr.status + "; " + xhr.responseText);
 	              rr.debugResponse = xhr.responseText;
-	              var obj = JSON.parse(xhr.responseText);
-
-	              if (obj != undefined) {
-	                if (obj["status"] != undefined && obj["status"] == "success") {
-	                  rr.statusCode = obj["booking_status"];
-	                  rr.statusDescription = obj["booking_status"];
-	                  rr.driveuBookingId = obj['driveu_booking_id'];
-	                  rr.driverId = obj["driver_id"];
-	                  rr.driverName = obj["driver_name"];
-	                  rr.driverNumber = obj["driver_number"];
-	                  rr.errorDescription = '';
-	                } else if (obj["status"] != undefined && obj["status"] == "error") {
-	                  rr.errorCode = "103";
-	                  rr.errorDescription = obj['message'];
-	                  rr.statusCode = 'error';
-	                } else {
-	                  rr.errorCode = "104";
-	                  rr.errorDescription = "unknown response";
-	                  rr.statusCode = 'error';
-	                }
-	              } else {
-	                rr.errorCode = "105";
-	                rr.errorDescription = "unknown response";
-	                rr.statusCode = 'error';
-	              }
-
 	              resolve(rr);
 	            } catch (e) {
-	              rr.errorCode = "-1";
+	              rr.errorCode = "-2";
 	              rr.errorDescription = e.message;
 	              reject(rr);
 	            }
@@ -2798,9 +2772,9 @@
 
 	          var queryString = _this._encodeQueryData(data);
 
-	          var query = _this._endpoint + "/affiliate/get-booking-status/?" + queryString;
-	          rr.errorDescription = query;
-	          xhr.open("GET", query);
+	          var url = _this._endpoint + "/affiliate/get-booking-status/?" + queryString;
+	          rr.errorDescription = url;
+	          xhr.open("GET", url);
 	          xhr.send();
 	        });
 	      };
