@@ -2762,6 +2762,32 @@
 	              if (xhr.readyState !== 4) return;
 	              if (xhr.status !== 200) throw new Error("Failed with status " + xhr.status + "; " + xhr.responseText);
 	              rr.debugResponse = xhr.responseType + " -- " + xhr.responseText;
+	              var obj = JSON.parse(xhr.responseText);
+
+	              if (obj != undefined) {
+	                if (obj["status"] != undefined && obj["status"] == "success") {
+	                  rr.statusCode = obj["booking_status"];
+	                  rr.statusDescription = obj["booking_status"];
+	                  rr.driveuBookingId = obj['driveu_booking_id'];
+	                  rr.driverId = obj["driver_id"];
+	                  rr.driverName = obj["driver_name"];
+	                  rr.driverNumber = obj["driver_number"];
+	                  rr.errorDescription = '';
+	                } else if (obj["status"] != undefined && obj["status"] == "error") {
+	                  rr.errorCode = "103";
+	                  rr.errorDescription = obj['message'];
+	                  rr.statusCode = 'error';
+	                } else {
+	                  rr.errorCode = "104";
+	                  rr.errorDescription = "unknown response";
+	                  rr.statusCode = 'error';
+	                }
+	              } else {
+	                rr.errorCode = "105";
+	                rr.errorDescription = "unknown response";
+	                rr.statusCode = 'error';
+	              }
+
 	              resolve(rr);
 	            } catch (e) {
 	              rr.errorCode = "-2";
@@ -3135,7 +3161,7 @@
 	function payuGetVersion(parameters, configuration) {
 	  return new Promise((resolve, reject) => {
 	    postResult({
-	      "version": "202012051453"
+	      "version": "202012051455"
 	    });
 	  });
 	}
