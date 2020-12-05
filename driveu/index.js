@@ -2754,7 +2754,7 @@
 	          var rr = new DriveUResponse();
 	          rr.clientBookingId = request["client_booking_id"];
 	          rr.debugRequest = JSON.stringify(data);
-	          rr.errorCode = "0";
+	          rr.errorCode = "4";
 	          var xhr = new XMLHttpRequest();
 
 	          xhr.onreadystatechange = function () {
@@ -2766,13 +2766,14 @@
 
 	              if (obj != undefined) {
 	                if (obj["status"] != undefined && obj["status"] == "success") {
+	                  rr.errorCode = "0";
+	                  rr.errorDescription = '';
 	                  rr.statusCode = obj["booking_status"];
 	                  rr.statusDescription = obj["booking_status"];
 	                  rr.driveuBookingId = obj['driveu_booking_id'];
 	                  rr.driverId = obj["driver_id"];
 	                  rr.driverName = obj["driver_name"];
 	                  rr.driverNumber = obj["driver_number"];
-	                  rr.errorDescription = '';
 	                } else if (obj["status"] != undefined && obj["status"] == "error") {
 	                  rr.errorCode = "103";
 	                  rr.errorDescription = obj['message'];
